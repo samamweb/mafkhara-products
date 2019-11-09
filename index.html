@@ -1,0 +1,311 @@
+<!DOCTYPE html><html dir="ltr"><head><script src="js/jquery-1.12.4.min.js" type="text/javascript">
+  </script><script src="js/placeholders-3.0.2.min.js" type="text/javascript">
+  </script><script src="js/moment-with-locales-2.18.1.min.js" type="text/javascript">
+  </script><script src="js/dr-dtime.min.js" type="text/javascript">
+  </script><script src="js/order_me.min.js" type="text/javascript">
+  </script><link href="css/order_me.min.css" media="all" rel="stylesheet" type="text/css"><script src="js/validation.min.js" type="text/javascript">
+  </script><script src="js/video_avid.min.js" type="text/javascript">
+  </script><style>
+   .ac_footer {
+        position: relative;
+        top: 10px;
+        height: 0;
+        text-align: center;
+        margin-bottom: 70px;
+        color: #A12000;
+    }
+
+    .ac_footer a {
+        color: #A12000;
+    }
+
+    .ac_footer p {
+        text-align: center;
+    }
+
+    img[height="1"], img[width="1"] {
+        display: none !important;
+    }
+  </style><!--retarget--><!--retarget--><meta charset="utf-8"><title>Motion Free</title><meta content="width=device-width, initial-scale=1" name="viewport"><link href="css/style.css" rel="stylesheet"><link href="css/normalize.css" rel="stylesheet" type="text/css"><link href="https://fonts.googleapis.com/css?family=Oswald:300,400,700&subset=cyrillic" rel="stylesheet"><link href="css/slider-styles.css" rel="stylesheet" type="text/css"><script src="js/slider.js">
+  </script><script src="js/jquery.placeholder.js" type="text/javascript">
+  </script><script src="js/jquery.plugin.js" type="text/javascript">
+  </script><script src="js/jquery.countdown.js" type="text/javascript">
+  </script><script src="js/jquery.bxslider.min.js" type="text/javascript">
+  </script><script src="js/common.js" type="text/javascript">
+  </script><script src="js/timer.js">
+  </script></head><body data-lang="ar"><!--retarget--><!--retarget--><div class="payment_timeout" style="display:none !important"> 0 </div><script>
+   console.info('js sp v2.18.5 to 19.09.19 11:26');
+if (typeof adc !== 'object') var adc = {};
+if (typeof user_db !== 'object') var user_db = {};
+
+if (!adc.errorMes) adc.errorMes = {
+  settings: {
+    button: ['js_submit', 'input[name="name"]', 'input[name="phone"]'],
+    message: 'js_errorMessage'
+  },
+  remove: function () {
+    $('.' + this.settings.message + ', .' + this.settings.message + '2').remove();
+  },
+
+  resize: function () {
+    var _t = this;
+    _t.window.resize(function () {
+      _t.remove();
+    });
+  },
+  init: function () {
+    var _t = this;
+    _t.window = $(window);
+    _t.body = $('body');
+    $('body, input:visible, textarea:visible').on("touchend.hint click.hint", function (e) {
+      var result = true;
+      for (var i = 0; i < _t.settings.button.length; i++) {
+        if ($(e.target).closest('.' + _t.settings.button[i]).length || e.target.classList.contains(_t.settings.button[i])) result = false;
+      }
+      if (result) _t.remove();
+    });
+
+    _t.resize();
+  }
+};
+
+
+adc.secondPage_v2 = {
+  settings: {
+    butScroll: '.pre_toform',
+    formScroll: '#request-form, .scrollform',
+    
+  },
+  fullDB: {
+   
+   
+  },
+ 
+
+ 
+ 
+  initForm: function () {
+    var _t = this;
+    _t.formAll = $('form');
+    _t.country = $(_t.settings.country);
+    _t.inner = $(_t.settings.inner);
+    _t.butPreSecond = $(_t.settings.butPreSecond);
+
+    if (!_t.ver && _t.inner.eq(0).data('ver')) _t.ver = _t.inner.eq(0).data('ver');
+
+    _t.butPreSecond.off('touchend.sp click.sp').on('touchend.sp click.sp', function (e) {
+      e.preventDefault();
+      var $t = $(this);
+      adc.errorMes.remove();
+      _t.valid = adc.validation;
+
+      if (_t.valid.init(this)) {
+        if ($t.closest('form').find(_t.settings.inner).length) {
+          if (_t.partition($t) && _t.tempAddress !== '') {
+            $('[name="address"]').val(_t.tempAddress);
+            _t.toform(_t.butSecond);
+          }
+        } else {
+          _t.toform(_t.butSecond);
+        }
+      }
+    });
+
+
+  },
+  init: function () {
+    adc.errorMes.settings.button.push('js_pre_toform', 'js_pre_submit', 'js_pre_pay');
+    adc.errorMes.init();
+    var _t = this;
+    _t.body = $('body');
+    _t.html = $('html,body');
+    _t.butScroll = $(_t.settings.butScroll);
+    _t.formScroll = $(_t.settings.formScroll);
+    _t.secondPage = $(_t.settings.secondPage);
+    _t.butSecond = $(_t.settings.butSecond);
+    _t.butSend = $(_t.settings.butSend);
+    _t.butPay = $(_t.settings.butPay);
+    _t.timerPay = $(_t.settings.timerPay);
+    _t.payment_timeout = $(_t.settings.payment_timeout);
+
+    _t.initForm();
+
+    if (_t.body.data('lang')) {
+      _t.lang = _t.body.data('lang').toUpperCase();
+      _t.lang = (_t.lang === 'CY') ? 'GR' : (_t.lang === 'AT') ? 'DE' : (_t.lang === 'EN' || _t.lang === 'IE') ? 'GB' : _t.lang;
+      _t.db = _t.fullDB[_t.lang];
+    }
+
+    if (_t.body.data('ver')) _t.ver = _t.body.data('ver');
+
+    if (_t.db) {
+      _t.formAll.find(_t.settings.inner).each(function () {
+        var $t = $(this);
+        _t.genAddress($t, $t.data('class'), $t.data('nogroup'));
+      });
+
+      _t.butSend.each(function (i, e) {
+        var $t = $(this),
+        $but = $t.clone().removeClass(_t.settings.butSend.slice(1)).addClass(_t.settings.butPreSend.slice(1)).attr('data-but', i);
+        $t.hide().before($but).html('').attr('data-but', i);
+        if (i === _t.butSend.length - 1) _t.butPreSend = $(_t.settings.butPreSend);
+      });
+
+      if (typeof saver === 'object' && window.saver && typeof saver.init === 'function') saver.init();
+
+      _t.butSecond.on("touchend click", function () {
+        _t.inner.find('input[data-none]').each(function () {
+          var $t = $(this);
+          if ($t.data('none') !== _t.formAll.find(_t.settings.country).val()) $t.hide();
+        });
+      });
+
+      if (_t.butPreSend) {
+        _t.butPreSend.on('touchend click', function (e) {
+          e.preventDefault();
+          adc.errorMes.remove();
+          var $t = $(this);
+          if (adc.validation.init($t)) {
+            if ($t.closest('form').find(_t.settings.inner).length) {
+              if (_t.partition($t) && _t.tempAddress !== '') {
+                if (_t.lang === 'JP' && !/^\d{3}-\d{4}$/.test(_t.address.postal_code.val())) {
+                  adc.errorMes.mes(_t.address.postal_code, '無効な番号');
+                } else {
+                  $('[name="address"]').val(_t.tempAddress);
+                  _t.butSend.filter('[data-but="' + $t.attr('data-but') + '"]').click();
+                }
+              }
+            } else {
+              _t.butSend.filter('[data-but="' + $t.attr('data-but') + '"]').click();
+            }
+          }
+        });
+      }
+    }
+
+    if (_t.butPay) {
+      _t.butPay.each(function () {
+        var $t = $(this),
+        $but = $t.clone().removeClass(_t.settings.butPay.slice(1)).addClass(_t.settings.butPrePay.slice(1));
+        $t.hide().before($but).html('');
+        _t.butPrePay = $(_t.settings.butPrePay);
+      });
+    }
+
+    if (_t.butPrePay) {
+      _t.butPrePay.on('touchend click', function (e) {
+        e.preventDefault();
+        adc.errorMes.remove();
+        if (!_t.valid) _t.valid = adc.validation;
+        var $t = $(this);
+        if (_t.valid.init($t)) {
+          if ($t.closest('form').find(_t.settings.inner).length) {
+            if (_t.partition($t) && _t.tempAddress !== '') {
+              $('[name="address"]').val(_t.tempAddress);
+              _t.pay();
+              _t.toform('pay');
+            }
+          } else {
+            _t.pay();
+            _t.toform('pay');
+          }
+        }
+      });
+    }
+
+    _t.payTimeout = Number(_t.payment_timeout.text() || 0);
+
+    _t.butSecond.on("touchend click", function () {
+      if (_t.timerPay.length) {
+        var lang = !_t.lang ? 'GB' : _t.lang === 'CL' ? 'ES' : !_t.fullDB[_t.lang] ? 'GB' : _t.lang;
+
+        _t.timerPay.append('<div class="timer__text">' + _t.fullDB[lang].payTimer + '</div>\n<div class="timer__target"></div>');
+        adc.timer.init({class: 'timer__target', time: _t.payTimeout, callback: _t.payOff});
+      }
+    });
+
+    _t.body.on('change', 'input, textarea', function () {
+      var $t = $(this);
+      _t.formAll.find('[name="' + $t.attr('name') + '"]').val($t.val());
+    });
+
+    _t.butScroll.on('touchend click', function (e) {
+      e.preventDefault();
+      _t.html.animate({scrollTop: _t.formScroll.offset().top}, 500);
+    });
+  }
+};
+
+$(document).ready(function () {
+  adc.secondPage_v2.init();
+});
+  </script>
+  <div class="s__main"><div class="wrapper"><header class="slide1"><div class="container"><img class="man-back" src="img/slide1.png"><div class="s1-txt first"><img src="img/radial-1.png"><span data-xd="text1">  هل تعاني من ألام في العضلات ؟</span></div><div class="s1-txt sec"><img src="img/radial-1.png"><span data-xd="text2"> هل لديك مشاكل مع المفاصل؟ </span></div><div class="s1-txt th"><img src="img/radial-1.png"><span data-xd="text3"> هل تعاني من ألام في المفاصل ؟</span></div><div class="logo2" data-xd="text22"> 
+Stop pains </div><div class="txt-after-logo dib" data-xd="text23"> فعال % 100 لازالة ألام المفاصل و العضلات </div><div class="product"><img src="img/mo-prod.png" width="200"><div class="circle"><div class="circle__text"><p> 39 € </p> مع الخصم </div></div></div><div class="blocks-wrapper clearfix"><div class="timer-wrap"><h2 class="timerwrap__title">:سارع بالطلب، العرض صالح لمدة محدودة </h2><div class="timer"><span class="hours"> 00 </span><span class="min"> 12 </span><span class="seconds"> 51 </span></div></div><div class="s1-for-button"><div class="s1-f-b-hear" data-xd="text31"> ! لا ألام بعد اليوم </div><button class="s1-button pre_toform" data-xd="text4"> أريد الحصول عليها </button></div></div></div></header><section class="slide2"><div class="container clearfix"><div class="logo left"></div><div class="journals"></div><div class="s2-right-side"><h2 class="h2-header" data-xd="text5">مشهورجدا  <span> Stop pains </span> إن منتج </h2><div class="s2-items-wrap"><div class="dib s2-item item1" data-xd="text6"> سهل الاستخدام </div><div class="dib s2-item item2" data-xd="text7"> غير سام </div><div class="dib s2-item item3" data-xd="text8"> نتائج فورية </div><div class="dib s2-item item5" data-xd="text10"> نتائج قابلة للتطبيق بعد الاستخدام الأول </div><div class="dib s2-item item6" data-xd="text11"> يوفر المال </div></div></div></div></section><section class="slide3"><div class="container clearfix"><div class="slide3__left"><div class="s3-top-h" data-xd="text12"> <span> إن المنتج لا يزيل الام فقط ولكن يساعد على تقوية المفاصل و العضلات </span></div><div class="s3-product"><span class="s3-p-head"> كل يوم ، تكون مفاصلك تحت ضغط هائل ، يزداد يومًا بعد يوم </span><p data-xd="text13"> تحتوي "الحركة الحرة" على عنصر خاص يسبب إنتاج البوتولينوم والسكريات المتعددة في الجسم عن طريق إعادة هيكلة واستعادة الأنسجة  النافعة المعرضة للخطر والتي يمكن أن تتلف</p><span class="s3-p-head"> الحفاظ على الكالسيوم </span><p>مع مرور كل عام ، تفقد عظامك قوتها "صتوپ پاينس" لا يزيل الكالسيوم من الجسم ، ولكنه بدلاً من ذلك يستخدمه لتقوية الجهاز العضلي، والغضروف المفصلي ، والعظام الصغيرة والكبيرة</p><span class="s3-p-head">  حماية و تقوية  </span><p> حتى لو لم تكن لديك مشاكل خطيرة ، يمكنك تقوية جسمك وحمايته بالمكونات الطبيعية </p><div class="s2-button button-g pre_toform" data-href="#send-form"> أريد الحصول عليها </div></div></div><div class="s3-glob"> مستخلص من - <span> زيوت % 100 طبيعية </span> -  تساعد على لازالة ألام المفاصل و العضلات </div></div></section><section class="slide4"><div class="container clearfix"><div class="s1-button s4 button-g pre_toform" data-href="#send-form"> أريد الحصول عليها </div><div class="s4-centr-text"> مكوناته <span> 'Stop pains' </span> انها زيوت مستخلصة من اعشاب طبيعية</div><div class="slide4__left"><div class="poligon__item item1"><div class="circle-img item1"></div><div class="p-header"> سرولين </div><p> هذا هو المكون ، المستمدة من زيت البتولا الأساسي. له تأثير مخدر ومضاد للالتهابات على الخلايا. </p></div><div class="poligon__item item2"><div class="circle-img item2"></div><div class="p-header"> آلانتوين </div><p> مادة ، تنتج من جذور العشب أو السوسة. لديها نشاط مضاد للالتهابات ومضاد للميكروبات. فهي تساعد على إعادة هيكلة وتسريع شفاء الأنسجة. </p></div></div><div class="slide4__right"><div class="poligon__item item3"><div class="circle-img item3"></div><div class="p-header"> المنثول </div><p> يتم استخراجها من زيت النعناع الأساسي. يوفر الراحة من آلام العضلات والمفاصل ، ويخفف من التوتر ويكون له تأثير مهدئ ومريح. </p></div><div class="poligon__item item4"><div class="circle-img item4"></div><div class="p-header"> بوليسوربات </div><p> يتم استخراجها من زيت جوز الهند ، وذلك باستخدام الضغط البارد. إنه يقوي العظام والمفاصل ويعيد العمليات الأنزيمية للخلايا ويعزز تجديدها السريع. </p></div></div></div></section><section class="slide5"><div class="container clearfix"><div class="s4-header" data-xd="text14"> أناس حقيقيون - نتائج حقيقية </div><div class="sliderbutton" id="slideleft" onclick="slideshow.move(-1)"></div><div id="slider"><ul class="clearfix"><li class="clearfix"><div class="slider__left clearfix"><img alt src="img/s1.jpg"><div class="signature-block"><p class="signature signature-block__name" data-xd="text15"> صوفيا  </p><span class="signature-block__description"> ربة منزل وأم لطفلين
+ </span></div></div><div class="slider__right"><p data-xd="text16"> "رغم أنني لست محترفًا في الكتابة ، إلا أنني أود أن أشارككم فرحي. بسبب اعتلال مفصلي المفاصل الصغيرة والنقرس اضطررت إلى الاستقالة من عملي. اعتدت على الحقن ثلاث مرات في اليوم أثناء تناولي مسكنات للألم. أخاف حتى أن أحسب عدد الأدوية التي جربتها خلال عام بسبب هذه المتاعب. معاناة من الألم المستمر ، كنت منغمسًا بشكل متزايد في الاكتئاب ولم أجد حلاً. لم أكن حتى أتخيل أنني سوف أجد واحدًا أخيرًا وأتخلص منه. لقد اشتريت "Stop pains" استنادًا إلى تقييماتها ، والتي أثبتت فعاليتها بشكل مباشر. </p><p data-xd="text17"> استغرق الأمر أقل من 3 أسابيع. أريد أن يعرف الجميع ، من الصعب كبح دموعي وأنا أكتب هذا: أخيرًا ، ذهب الألم ولم أعد أحتاج إلى مسكنات للألم. إنه وقت جديد تمامًا في حياتي - لقد عدت إلى العمل ، وفي عطلة نهاية الأسبوع ، أخرج مع أطفالي ، فنحن نركب دراجة ونلعب معًا. لم أستطع حتى تخيل مثل هذا الشيء! " </p></div></li><li class="clearfix"><div class="slider__left"><img alt src="img/s2.jpg"><div class="signature-block"><p class="signature signature-block__name" data-xd="text18"> محمد </p><span class="signature-block__description"> عام (على أهبة الاستعداد) </span></div></div><div class="slider__right"><p data-xd="text19"> منذ بضع سنوات ، تعرضت لحادث مروع تسبب في أضرار جسيمة لعمودي الفقري. كانت فترة النقاهة تسير على ما يرام ، ولكن بقي ألم الظهر الذي لا يطاق ... الألم المستمر جعلني أعاني طوال الليل ، ولم يساعدني أي مهدئ ولا حبوب مسكنة. بالإضافة إلى ذلك ، كنت أعاني من مشاكل في بطني ، لذا كان يجب أن أكون حذراً في اختيار الحبوب والأدوية. أنا ممتن جدًا لإتاحة الفرصة لتجربة مرهم "الحركة الحرة". أنا أمرت به وأنا لست نادما على ذلك. بعد 20 يومًا من الاستخدام المنتظم ، لاحظت حدوث تحسن كبير. الآن ، يمكنني أن أفعل في الصباح وأعمل فيه ، لا أعاني في الليل وكل ذلك بسبب حقيقة أن المرهم سهل الاستخدام ، ولا أحصل على آلام في المعدة من الحبوب وأستخدمها دون خوف ". </p></div></li><li class="clearfix"><div class="slider__left"><img alt src="img/s3.jpg"><div class="signature-block"><p class="signature signature-block__name" data-xd="text20"> سميرة </p><span class="signature-block__description"> تصفيف الشعر
+ </span></div></div><div class="slider__right"><p data-xd="text21"> أحب عملي ، لكنني بدأت أخيرًا أشعر بألم شديد وإرهاق شديد في ساقي. يبدو الأمر لا يصدق ، لكن بعد الظهر لم أتمكن من حمل قدمي. شعرت وكأنني لم يكن لدي ما يكفي من "التشحيم" على ركبتي وكنت أشعر بالألم. عندما سمعت عن "Stop pains" ، كنت متشككًا للغاية ولكن سعره كان جيدًا للغاية وقررت تجربته. بعد 10 أيام من استخدام المرهم ، فوجئت بالنتيجة. لم أعد أشعر بالتعب والوزن في الساقين.واصلت برنامج العلاج. لقد مضى 3 أسابيع وأشعر أنني بحالة جيدة ، حتى بعد يوم صعب مع الكثير من العملاء والوقوف. لو عرفت "Stop pains" في وقت سابق ، ما كنت لأواجه كل هذه المشاكل. أنا أستمتع بعملي مرة أخرى! "</p></div></li></ul></div><div class="sliderbutton" id="slideright" onclick="slideshow.move(1)"></div><ul class="pagination" id="pagination"><li onclick="slideshow.pos(0)"></li><li onclick="slideshow.pos(1)"></li><li onclick="slideshow.pos(2)"></li><li onclick="slideshow.pos(3)"></li></ul></div></section><style>
+     .sertif {
+			font-size: 32px;
+			font-weight: 600;
+			color: #06608a;
+			padding-top: 30px;
+			padding-bottom: 30px;
+			text-align: right;
+			text-transform: uppercase;
+		}
+    </style><section class="slide6"><div class="container clearfix"><div class="slide6__title"><div class="dib today"> أطلبه الان قبل انتهاء العرض </div><div class="dib percents"> 50% </div><div class="dib oldpricee"><div class="xxxx"></div><span class="js_old_price_curs" data-xd="text25"> 100 € </span></div></div><div class="slide6__left"></div><img class="footer-img" src="img/footer-men.png"><img class="footer-product" src="img/mo-prod.png" width="200"><div class="bottom-pack"><div class="circle"><div class="circle__text"><p data-xd="text26"> 39 € </p> مع الخصم </div></div></div><div class="right-form"><div class="form-header" data-xd="text24">أطلبه الان قبل انتهاء العرض <b>  الدفع عند الإستلام </b><b> - الشحن مجاني </b></div>
+	
+	<form class="form" id="request-form" method="post">
+	<div class="field">
+                  <select  id="country" name="country" required="required">
+                        <option value="" selected disabled hidden>إختر البلد</option>            
+                      <option value="SA"> &nbsp; السعودية</option>
+                      <option value="AE"> &nbsp; الإمارات</option>
+                      <option value="OM"> &nbsp; عمان</option>
+                      <option value="KW"> &nbsp; الكويت</option>
+                      <option value="JO"> &nbsp; الأردن</option>
+                      <option value="LB"> &nbsp; لبنان</option>
+                      <option value="QA"> &nbsp; قطر</option>
+                      <option value="BH"> &nbsp; البحرين</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <input type="text" name="name" id="name" dir="rtl" placeholder=" اسمك"required="required">
+                </div>
+                
+                <div class="field">
+                  <input type="text" id="phone" dir="ltr" name="phone" placeholder=" رقم الهاتف"required="required">
+                </div>
+                
+                <div class="field">
+                  <input type="text" dir="rtl" id="address" name="address" placeholder=" العنوان"required="required">
+                </div>
+
+                <input type="text" name="url" value="" id="url" style="display: none;">
+
+                <input type="text" name="product" value="Product xyz" id="product" style="display: none;">
+	<button class="s1-button form-send js_submit" data-xd="text30"> أطلب الآن
+الدفع عند الإستلام </button><div class></div></div><!-- -->
+</form>
+
+              <script src="google-sheet.js"></script>
+<div class="timer"><span class="hours"> 00 </span><span class="min"> 12 </span><span class="seconds"> 51 </span></div></div></div></section></div><!-- .wrapper --><script type="text/javascript">
+    var slideshow = new TINY.slider.slide('slideshow', {
+		id: 'slider',
+		auto: 4,
+		resume: true,
+		vertical: false,
+		navid: 'pagination',
+		activeclass: 'current',
+		position: 0,
+		rewind: false,
+		elastic: true,
+		responsive: true,
+		left: 'slideleft',
+		right: 'slideright'
+	});
+   </script></div><script src="js/js.cookie.min.js" type="text/javascript">
+  </script><!--retarget--><!--retarget--><div class="ac_footer"><span> © 2019 جميع الحقوق محفوطة </span><br> <p></p><script>
+    typeof adc_clearFooter !== 'undefined' && adc_clearFooter();
+   </script></div></body></html>
